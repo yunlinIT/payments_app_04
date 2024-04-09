@@ -21,12 +21,16 @@ public class PaymentController {
 
     @GetMapping(value = "success")
     public String paymentResult(
-            Model model,
-            @RequestParam(value = "orderId") String orderId,
-            @RequestParam(value = "amount") Integer amount,
-            @RequestParam(value = "paymentKey") String paymentKey) throws Exception {
+        Model model,
+        @RequestParam(value = "orderId") String orderId,
+        @RequestParam(value = "amount") Integer amount,
+        @RequestParam(value = "paymentKey") String paymentKey) throws Exception {
 
-        String secretKey = "테스트_시크릿_키:";
+        if(orderId.startsWith("sample-") && amount != 50000 ){
+            throw new RuntimeException("결제 금액이 오만원이 아닌데?");
+        }
+
+        String secretKey = "test_sk_6bJXmgo28eBnx5GDX4Nj3LAnGKWx:";
 
         Base64.Encoder encoder = Base64.getEncoder();
         byte[] encodedBytes = encoder.encode(secretKey.getBytes("UTF-8"));
@@ -82,9 +86,9 @@ public class PaymentController {
 
     @GetMapping(value = "fail")
     public String paymentResult(
-            Model model,
-            @RequestParam(value = "message") String message,
-            @RequestParam(value = "code") Integer code
+        Model model,
+        @RequestParam(value = "message") String message,
+        @RequestParam(value = "code") Integer code
     ) throws Exception {
 
         model.addAttribute("code", code);
